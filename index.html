@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#150f22">
+<title>This one is for Ming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#150f22;--dusk:#251a38;--rose:#f4a7ba;--peach:#ffd8c0;--text:#fbeee6;--mute:#bfaec4;--green:#8fd4a8;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--text);font:400 17px/1.65 "DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.serif{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500}
+section{padding:64px 22px;max-width:520px;margin:0 auto}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+
+/* 1. code */
+.code-wrap{min-height:100svh;display:flex;flex-direction:column;justify-content:center}
+#code{font:400 14.5px/1.75 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#eadff0}
+#code .c{color:var(--green)}
+#code .k{color:var(--rose)}
+.scroll{margin-top:28px;color:var(--mute);font-size:.85rem;opacity:0;transition:opacity 1s}
+.scroll.on{opacity:1}
+
+/* 2. heart */
+.garden{position:relative;margin:0 auto;max-width:460px}
+#cv{display:block;width:100%}
+.words{position:absolute;left:50%;top:36%;transform:translateX(-50%);width:58%;text-align:center}
+.words .m{font-size:clamp(1.5rem,7.5vw,2.2rem);line-height:1.1;color:var(--peach);opacity:0;transition:opacity 3s}
+.words .l{margin-top:10px;font-size:clamp(.8rem,3.6vw,1rem);color:var(--rose);opacity:0;transition:opacity 3s}
+.words .on{opacity:1}
+.clock{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;margin-top:18px}
+.clock b{display:block;font:italic 500 2.1rem/1 "Cormorant Garamond",serif;color:var(--rose)}
+.clock span{font-size:.78rem;color:var(--mute)}
+.since{text-align:center;color:var(--mute);font-size:.9rem;margin:0 0 4px}
+
+/* 3. letter */
+h2{font:italic 500 2.2rem/1.1 "Cormorant Garamond",serif;margin:0 0 24px}
+.open{display:block;margin:0 auto;padding:15px 30px;border-radius:999px;border:1px solid var(--rose);background:transparent;color:var(--peach)}
+.letter{max-height:0;overflow:hidden;transition:max-height 2s ease}
+.letter.on{max-height:6000px}
+.letter div{margin-top:26px;padding:26px 22px;background:var(--dusk);border-radius:6px 6px 22px 6px;border-left:3px solid var(--rose)}
+.letter p{margin:0 0 1.4em;white-space:pre-line}
+.letter .sig{font:italic 500 1.7rem "Cormorant Garamond",serif;color:var(--peach);margin:1.2em 0 0}
+
+/* 4. hug */
+.hug{text-align:center;padding-bottom:120px}
+.hug p{color:var(--mute);margin:0 0 26px}
+.hbtn{border:0;width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--rose),var(--peach));display:inline-grid;place-items:center;box-shadow:0 10px 40px #f4a7ba44;transition:transform .15s}
+.hbtn:active{transform:scale(.92)}
+.hbtn svg{width:38px;height:38px;fill:#7a1f4a}
+.after{min-height:3em;margin-top:24px;font-size:1.7rem;line-height:1.2;color:var(--peach)}
+.fl{position:fixed;bottom:-30px;pointer-events:none;animation:up var(--d) ease-in forwards;z-index:9}
+@keyframes up{to{transform:translateY(-110vh) rotate(var(--r));opacity:0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<section class="code-wrap">
+  <div id="code"></div>
+  <div class="scroll" id="scrollHint">scroll down ↓</div>
+</section>
+
+<section>
+  <p class="since serif">still counting, since 20 October 2026</p>
+  <div class="garden" id="gw">
+    <canvas id="cv"></canvas>
+    <div class="words serif">
+      <div class="m" id="m">Ming, forever</div>
+      <div class="l" id="l">I love you so much<br>– Parag</div>
+    </div>
+  </div>
+  <div class="clock serif" id="clock"></div>
+</section>
+
+<section>
+  <h2>I wrote you something</h2>
+  <button class="open" id="openBtn" aria-expanded="false">Open it</button>
+  <div class="letter" id="letter"><div id="lb"></div></div>
+</section>
+
+<section class="hug">
+  <p>If you want a hug, touch the heart.</p>
+  <button class="hbtn" id="hug" aria-label="Send a hug"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.6 1 5.6 3 2-2 3.6-3 5.6-3 3.400 0 5.500 3.400 4 6.800C19.500 16.400 12 21 12 21z"/></svg></button>
+  <div class="after serif" id="after" aria-live="polite"></div>
+</section>
+
+<script>
+/* ===== EDIT THIS ===== */
+const NAME = "Ming", ME = "Parag";
+const MET = new Date(2026, 9, 20, 0, 0, 0);   // 20 Oct 2026
+const CODE = [
+ '<span class="c">/**</span>',
+ '<span class="c"> * THE CODE OF LOVE</span>',
+ '<span class="c"> */</span>',
+ 'Hey <span class="k">' + NAME + '</span>!',
+ 'Do you remember the day we first met?',
+ '<span class="c">// 20 October 2026. On Discord.</span>',
+ 'Since that day a spark begun;',
+ '<span class="c">// Your voice. Your words. Your smile.</span>',
+ 'Your everything got imprinted in my heart;',
+ 'As the days went on;',
+ 'The bond grew stronger and stronger;',
+ 'Journey from hello to love;',
+ 'We are far apart, but we have come a long way together;',
+ '<span class="c">// The distance is only a temporary bug.</span>',
+ '',
+ 'All I want to say is:',
+ '<span class="k">' + NAME + ', I will keep falling for you;</span>'
+].join("<br>");
+const LETTER = [
+ "I love you.",
+ "I love your hair.\nI love your eyes.\nI love your smile.\nI love your looks.\nI love your voice.\nI love the way you talk.\nI love your personality.\nI love your sense of humor.\nI love your little habits.\nI love the way you express yourself.\nI love how you make me smile without even trying.\nI love how comfortable I feel when I talk to you.\nI love how your presence can make an ordinary moment feel special.\nI love the way you care about the little things.\nI love the way you make me want to know more about you.\nI love every little detail that makes you, you.",
+ "And honestly…",
+ "I don’t just love the way you look.\nI love the way you make me feel.\nI love the peace I find in talking to you.\nI love the happiness you bring into my life.\nI love thinking about you.\nI love hearing from you.\nI love having you in my life.",
+ "And somewhere along the way…",
+ "I stopped simply liking you.\nI started caring about you.\nI started missing you.\nI started looking forward to talking to you.\nI started finding reasons to think about you.",
+ "And now…",
+ "I think I’m falling for you.\nNot just your smile.\nNot just your beauty.\nNot just your personality.",
+ "I’m falling for you—the whole you.",
+ "I love you.\nAnd I don’t know exactly when it happened…",
+ "But somehow,\nyou became someone very special to me."
+];
+const HUG_TEXT = "Sending you a hug across the distance ♥";
+/* ===================== */
+const $ = id => document.getElementById(id);
+
+/* typewriter (from the repo, no jQuery) */
+(function(){
+  const el = $("code");
+  el.innerHTML = CODE;
+  el.style.minHeight = el.offsetHeight + "px";
+  const str = CODE; el.innerHTML = "";
+  let p = 0;
+  setTimeout(function tick(){
+    if (str[p] === "<") p = str.indexOf(">", p) + 1; else p++;
+    el.innerHTML = str.slice(0, p) + (p & 1 ? "_" : "");
+    if (p < str.length) setTimeout(tick, 42);
+    else { el.innerHTML = str; $("scrollHint").classList.add("on"); }
+  }, 700);
+})();
+
+/* blooming heart garden (from the repo, scaled for phones) */
+const cv = $("cv"), ctx = cv.getContext("2d");
+const W = Math.min(window.innerWidth - 44, 460), H = Math.round(W * 0.93), S = W / 670, dpr = window.devicePixelRatio || 1;
+cv.width = W * dpr; cv.height = H * dpr; cv.style.height = H + "px";
+ctx.scale(dpr, dpr); ctx.globalCompositeOperation = "lighter";
+const R = (a, b) => Math.random() * (b - a) + a, RI = (a, b) => Math.floor(R(a, b + 1));
+const rot = (x, y, t) => [Math.cos(t) * x - Math.sin(t) * y, Math.sin(t) * x + Math.cos(t) * y];
+const rad = d => d * Math.PI / 180;
+let blooms = [];
+function bloom(x, y) {
+  const pc = RI(8, 15), a = 360 / pc, s0 = RI(0, 90), r = RI(8, 10) * Math.max(S, .6);
+  const c = "rgba(" + RI(128, 255) + "," + RI(0, 128) + "," + RI(0, 128) + ",.12)";
+  const petals = [];
+  for (let i = 0; i < pc; i++) petals.push({ sa: R(.1, 3), sb: R(.1, 3), st: s0 + i * a, an: a, gf: R(.1, 1), r: 1 });
+  blooms.push({ x, y, r, c, petals });
+}
+setInterval(() => {
+  blooms = blooms.filter(b => {
+    ctx.save(); ctx.translate(b.x, b.y); ctx.strokeStyle = b.c;
+    let live = false;
+    for (const p of b.petals) if (p.r <= b.r) {
+      live = true; p.r += p.gf;
+      const v1 = rot(0, p.r, rad(p.st)), v2 = rot(v1[0], v1[1], rad(p.an));
+      ctx.beginPath(); ctx.moveTo(v1[0], v1[1]);
+      ctx.bezierCurveTo(v1[0] * p.sa, v1[1] * p.sa, v2[0] * p.sb, v2[1] * p.sb, v2[0], v2[1]);
+      ctx.stroke();
+    }
+    ctx.restore(); return live;
+  });
+}, 1000 / 60);
+function hp(a) {
+  const t = a / Math.PI;
+  return [W / 2 + 19.5 * S * 16 * Math.pow(Math.sin(t), 3),
+          H / 2 - 55 * S - 20 * S * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))];
+}
+function startHeart() {
+  const pts = []; let ang = 10;
+  const iv = setInterval(() => {
+    const b = hp(ang);
+    if (!pts.some(q => Math.hypot(q[0] - b[0], q[1] - b[1]) < 13 * Math.max(S, .6))) { pts.push(b); bloom(b[0], b[1]); }
+    if (ang >= 30) { clearInterval(iv); $("m").classList.add("on"); setTimeout(() => $("l").classList.add("on"), 2500); }
+    else ang += .2;
+  }, 50);
+}
+new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { startHeart(); o.disconnect(); } }, { threshold: .6 }).observe($("gw"));
+
+/* time together */
+function clock() {
+  let s = Math.max(0, Math.floor((Date.now() - MET) / 1000));
+  const d = Math.floor(s / 86400); s %= 86400;
+  const h = Math.floor(s / 3600); s %= 3600;
+  const m = Math.floor(s / 60); s %= 60;
+  const cell = (n, l) => "<div><b>" + String(n).padStart(2, "0") + "</b><span>" + l + "</span></div>";
+  $("clock").innerHTML = cell(d, "days") + cell(h, "hours") + cell(m, "minutes") + cell(s, "seconds");
+}
+clock(); setInterval(clock, 1000);
+
+/* letter */
+$("lb").innerHTML = LETTER.map(t => "<p>" + t + "</p>").join("") + '<p class="sig">— ' + ME + "</p>";
+$("openBtn").addEventListener("click", e => {
+  const on = $("letter").classList.toggle("on");
+  e.currentTarget.textContent = on ? "Close it" : "Open it";
+  e.currentTarget.setAttribute("aria-expanded", on);
+});
+
+/* hug */
+$("hug").addEventListener("click", () => {
+  $("after").textContent = HUG_TEXT;
+  if (navigator.vibrate) navigator.vibrate(30);
+  for (let i = 0; i < 26; i++) {
+    const h = document.createElement("div");
+    h.className = "fl"; h.textContent = ["♥", "♡", "❤"][i % 3];
+    h.style.left = Math.random() * 100 + "vw";
+    h.style.fontSize = 18 + Math.random() * 26 + "px";
+    h.style.color = i % 2 ? "var(--rose)" : "var(--peach)";
+    h.style.setProperty("--d", 2.5 + Math.random() * 2.5 + "s");
+    h.style.setProperty("--r", (Math.random() * 60 - 30) + "deg");
+    document.body.appendChild(h); setTimeout(() => h.remove(), 5200);
+  }
+});
+</script>
+</body>
+</html>
